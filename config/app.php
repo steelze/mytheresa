@@ -60,6 +60,18 @@ return [
 
     /*
     |--------------------------------------------------------------------------
+    | Application Currency
+    |--------------------------------------------------------------------------
+    |
+    | Here you may specify the default currency for your application, which
+    | will be used by the Product model to construct the product price array.
+    |
+    */
+
+    'currency' => 'EUR',
+
+    /*
+    |--------------------------------------------------------------------------
     | Application Timezone
     |--------------------------------------------------------------------------
     |
