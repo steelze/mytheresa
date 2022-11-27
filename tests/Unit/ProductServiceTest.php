@@ -4,7 +4,7 @@ namespace Tests\Unit;
 
 use App\Models\Product;
 use App\Services\ProductService;
-use PHPUnit\Framework\TestCase;
+use Tests\TestCase;
 
 class ProductServiceTest extends TestCase
 {
@@ -19,19 +19,11 @@ class ProductServiceTest extends TestCase
             'price' => $price,
         ]);
 
-        $data = (new ProductService)->constructProductPriceStructure($product);
+        $data = (new ProductService)->getProductPricingInfo($product);
 
-        $this->assertEquals($price, $data->price->final);
-        $this->assertEquals($price, $data->price->original);
-        $this->assertEquals(null, $data->price->discount_percentage);
-        // $this->assertJsonStructure([
-        //     'price' => [
-        //         'original',
-        //         'final',
-        //         'discount_percentage',
-        //         'currency',
-        //     ],
-        // ]);
+        $this->assertEquals((int) $price, $data['final']);
+        $this->assertEquals((int) $price, $data['original']);
+        $this->assertEquals(null, $data['discount_percentage']);
     }
 
     public function test_that_discount_is_applied_if_available(): void
@@ -39,7 +31,7 @@ class ProductServiceTest extends TestCase
         $price = 141000;
         $discount = 10;
 
-        $final_price = ($discount / 100) * $price;
+        $final_price = $price - (($discount / 100) * $price);
 
         $product = new Product([
             'sku' => '0000003',
@@ -48,11 +40,11 @@ class ProductServiceTest extends TestCase
             'price' => $price,
         ]);
 
-        $data = (new ProductService)->constructProductPriceStructure($product);
+        $data = (new ProductService)->getProductPricingInfo($product);
 
-        $this->assertEquals($final_price, $data->price->final);
-        $this->assertEquals($price, $data->price->original);
-        $this->assertEquals($discount.'%', $data->price->discount_percentage);
+        $this->assertEquals((int) $final_price, $data['final']);
+        $this->assertEquals((int) $price, $data['original']);
+        $this->assertEquals($discount.'%', $data['discount_percentage']);
     }
 
     public function test_that_discount_is_not_applied_if_not_available(): void
@@ -66,11 +58,11 @@ class ProductServiceTest extends TestCase
             'price' => $price,
         ]);
 
-        $data = (new ProductService)->constructProductPriceStructure($product);
+        $data = (new ProductService)->getProductPricingInfo($product);
 
-        $this->assertEquals($price, $data->price->final);
-        $this->assertEquals($price, $data->price->original);
-        $this->assertEquals(null, $data->price->discount_percentage);
+        $this->assertEquals((int) $price, $data['final']);
+        $this->assertEquals((int) $price, $data['original']);
+        $this->assertEquals(null, $data['discount_percentage']);
     }
 
     public function test_that_highest_discount_is_applied_if_multiple_discount_is_available(): void
@@ -82,7 +74,7 @@ class ProductServiceTest extends TestCase
 
         $discount = ($first_discount > $second_discount) ? $first_discount : $second_discount;
 
-        $final_price = ($discount / 100) * $price;
+        $final_price = $price - (($discount / 100) * $price);
 
         $product = new Product([
             'sku' => '0000003',
@@ -91,10 +83,10 @@ class ProductServiceTest extends TestCase
             'price' => $price,
         ]);
 
-        $data = (new ProductService)->constructProductPriceStructure($product);
+        $data = (new ProductService)->getProductPricingInfo($product);
 
-        $this->assertEquals($final_price, $data->price->final);
-        $this->assertEquals($price, $data->price->original);
-        $this->assertEquals($discount.'%', $data->price->discount_percentage);
+        $this->assertEquals((int) $final_price, $data['final']);
+        $this->assertEquals((int) $price, $data['original']);
+        $this->assertEquals($discount.'%', $data['discount_percentage']);
     }
 }

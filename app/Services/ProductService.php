@@ -13,7 +13,7 @@ class ProductService
         return [
             'original' => $product->price,
             'final' => $product->price,
-            'discount_percentage' => '30%',
+            'discount_percentage' => null,
             'currency' => config('app.currency'),
         ];
     }
