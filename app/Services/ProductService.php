@@ -43,6 +43,15 @@ class ProductService
         return $discounts->firstWhere('value', $max);
     }
 
+    public function getProductDiscount(Product $product): ?array
+    {
+        $discounts_available = $this->getDiscountsAvailableForProduct($product);
+
+        return ($discounts_available->isNotEmpty())
+            ? $this->getMaximumDiscount($discounts_available)
+            : null;
+    }
+
     public function calculateProductDiscount(Product $product, array $discount): int
     {
         $value = $discount['value'];

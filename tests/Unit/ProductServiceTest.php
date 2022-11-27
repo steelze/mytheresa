@@ -4,18 +4,37 @@ namespace Tests\Unit;
 
 use App\Models\Product;
 use App\Services\ProductService;
+use Illuminate\Support\Facades\Config;
 use Tests\TestCase;
 
 class ProductServiceTest extends TestCase
 {
+    public function setUp(): void
+    {
+        parent::setUp();
+
+        Config::set('discounts', [
+            [
+                'type' => 'category',
+                'key' => 'boots',
+                'value' => 30,
+            ],
+            [
+                'type' => 'sku',
+                'key' => '000003',
+                'value' => 15,
+            ],
+        ]);
+    }
+
     public function test_that_product_model_structure_is_returned(): void
     {
-        $price = 141000;
+        $price = 79500;
 
         $product = new Product([
-            'sku' => '0000003',
+            'sku' => '0000001',
             'name' => 'Iphone 14 Pro Max',
-            'category' => 'Boot',
+            'category' => 'Phone',
             'price' => $price,
         ]);
 
@@ -28,17 +47,18 @@ class ProductServiceTest extends TestCase
 
     public function test_that_discount_is_applied_if_available(): void
     {
-        $price = 141000;
-        $discount = 10;
-
-        $final_price = $price - (($discount / 100) * $price);
+        $price = 89000;
 
         $product = new Product([
-            'sku' => '0000003',
-            'name' => 'Iphone 14 Pro Max',
-            'category' => 'Boot',
+            'sku' => '0000001',
+            'name' => 'BV Lean leather ankle boots',
+            'category' => 'boots',
             'price' => $price,
         ]);
+
+        $discount = (new ProductService)->getProductDiscount($product)['value'];
+
+        $final_price = $price - (($discount / 100) * $price);
 
         $data = (new ProductService)->getProductPricingInfo($product);
 
@@ -49,12 +69,12 @@ class ProductServiceTest extends TestCase
 
     public function test_that_discount_is_not_applied_if_not_available(): void
     {
-        $price = 141000;
+        $price = 79500;
 
         $product = new Product([
-            'sku' => '0000003',
+            'sku' => '0000001',
             'name' => 'Iphone 14 Pro Max',
-            'category' => 'Boot',
+            'category' => 'Phone',
             'price' => $price,
         ]);
 
@@ -67,21 +87,18 @@ class ProductServiceTest extends TestCase
 
     public function test_that_highest_discount_is_applied_if_multiple_discount_is_available(): void
     {
-        $price = 141000;
-
-        $first_discount = 10;
-        $second_discount = 15;
-
-        $discount = ($first_discount > $second_discount) ? $first_discount : $second_discount;
-
-        $final_price = $price - (($discount / 100) * $price);
+        $price = 89000;
 
         $product = new Product([
             'sku' => '0000003',
-            'name' => 'Iphone 14 Pro Max',
-            'category' => 'Boot',
+            'name' => 'BV Lean leather ankle boots',
+            'category' => 'boots',
             'price' => $price,
         ]);
+
+        $discount = (new ProductService)->getProductDiscount($product)['value'];
+
+        $final_price = $price - (($discount / 100) * $price);
 
         $data = (new ProductService)->getProductPricingInfo($product);
 
