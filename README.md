@@ -62,7 +62,7 @@ These instructions will get you a copy of the project up and running on your loc
 
   - Start Application
     ```
-    $ php artisan server
+    $ php artisan serve
     ```
   - Visit http://localhost:8000/api/products on your browser or Postman
 
