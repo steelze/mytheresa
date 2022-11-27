@@ -6,8 +6,15 @@ use App\Models\Product;
 
 class ProductService
 {
-    public function constructProductPriceStructure(Product $product): Product
+    public function getProductPricingInfo(Product $product): array
     {
-        return $product;
+        // Apply discount
+
+        return [
+            'original' => $product->price,
+            'final' => $product->price,
+            'discount_percentage' => '30%',
+            'currency' => config('app.currency'),
+        ];
     }
 }
