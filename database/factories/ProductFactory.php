@@ -9,7 +9,7 @@ use Illuminate\Database\Eloquent\Factories\Factory;
  */
 class ProductFactory extends Factory
 {
-    protected int $order = 0;
+    protected int $order = 5;
 
     /**
      * Define the model's default state.
@@ -22,8 +22,8 @@ class ProductFactory extends Factory
 
         return [
             'sku' => str_pad($this->order, 6, "0", STR_PAD_LEFT),
-            'name' => 'BV Lean leather ankle boots',
-            'category' => 'boots',
+            'name' => $this->faker->company,
+            'category' => $this->faker->randomElement(['boots', 'sandals', 'sneakers']),
             'price' => $this->faker->numberBetween(10000, 500000),
         ];
     }
