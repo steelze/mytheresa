@@ -71,6 +71,8 @@ These instructions will get you a copy of the project up and running on your loc
   $ php artisan test
   ```
   If correctly setup, all tests should pass
+
+  ![Alt text](/public/tests.png "Test cases")
   
 ### Author ✍🏾
 Odunayo Ileri Ogungbure
