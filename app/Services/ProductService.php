@@ -3,6 +3,7 @@
 namespace App\Services;
 
 use App\Models\Product;
+use Illuminate\Support\Collection;
 
 class ProductService
 {
@@ -16,5 +17,12 @@ class ProductService
             'discount_percentage' => null,
             'currency' => config('app.currency'),
         ];
+    }
+
+    public function getDiscountsAvailableForProduct(Product $product): Collection
+    {
+        $discounts = collect(config('discounts'));
+
+        return $discounts;
     }
 }
