@@ -12,6 +12,6 @@ class ProductController extends Controller
     public function index(Request $request): JsonResponse
     {
         $products = Product::all();
-        return RespondWith::success();
+        return RespondWith::success($products);
     }
 }
